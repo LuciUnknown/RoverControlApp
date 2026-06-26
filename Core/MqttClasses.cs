@@ -292,5 +292,16 @@ namespace RoverControlApp.Core
 			public long Timestamp { get; set; }
 		}
 
+		public class RosoutLogs
+		{
+			public int line {  get; set; }
+			public string? function { get; set; }
+			public string? file { get; set; }
+			public string? message { get; set; }
+			public string? name { get; set; }
+			public int level { get; set; }
+			public long Timestamp { get; set; }
+		}
+
 	}
 }
