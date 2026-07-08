@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 using Godot;
@@ -28,7 +28,7 @@ public partial class Mqtt : SettingBase, ICloneable
 		_topicSamplerControlControl = "SamplerControl";
 		_topicBatteryInfo = "BatteryInfo";
 		_topicBatteryControl = "BatteryControl";
-		_topicRosoutLogs = "Logs";
+		_topicRosoutLogs = "Logs/+";
 	}
 
 	public Mqtt
@@ -213,5 +213,3 @@ public partial class Mqtt : SettingBase, ICloneable
 	string _topicBatteryControl;
 	string _topicRosoutLogs;
 }
-
-

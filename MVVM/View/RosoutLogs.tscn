@@ -58,10 +58,18 @@ layout_mode = 0
 offset_top = 53.0
 offset_right = 429.0
 offset_bottom = 240.0
+theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
+scroll_following = true
+
+[node name="SelectNode" type="OptionButton" parent="."]
+layout_mode = 0
+offset_right = 143.0
+offset_bottom = 23.0
 
 [connection signal="toggled" from="HBoxContainer/DEBUG" to="." method="ToggleFilter" binds= [10]]
 [connection signal="toggled" from="HBoxContainer/INFO" to="." method="ToggleFilter" binds= [20]]
 [connection signal="toggled" from="HBoxContainer/WARN" to="." method="ToggleFilter" binds= [30]]
 [connection signal="toggled" from="HBoxContainer/ERROR" to="." method="ToggleFilter" binds= [40]]
 [connection signal="toggled" from="HBoxContainer/CheckBox" to="." method="ToggleFilter" binds= [50]]
+[connection signal="item_selected" from="SelectNode" to="." method="OnNodeFilterItemSelected"]
