@@ -16,8 +16,8 @@ namespace RoverControlApp.MVVM.ViewModel
 	{
 
 		private readonly List<MqttClasses.RosoutLogs> _allLogsHistory = new();
-		private string _selectedNodeFilter = "Wszystkie";
-		
+		private string _selectedNodeFilter = "All";
+
 		public static event Action<int, Color>? OnNewLogReceived;
 
 		private readonly Dictionary<int, bool> _activeFilters = new()
@@ -33,18 +33,18 @@ namespace RoverControlApp.MVVM.ViewModel
 			//FATAL
 			{ 50, true },
 		};
-		
-		
+
+
 		private readonly List<string> _hardcodedNodes = new()
 		{
-			"Wszystkie",
+			"All",
 			"manipulator_ws",
 			"raptor_ws"
 		};
 
 		[Export]
 		private RichTextLabel _logDisplay = null!;
-		
+
 		[Export]
 		private OptionButton _selectNode = null!;
 
@@ -59,7 +59,7 @@ namespace RoverControlApp.MVVM.ViewModel
 			MqttNode.Singleton.MessageReceivedAsync -= OnRosoutInfo;
 			LocalSettings.Singleton.PropagatedPropertyChanged -= OnSettingsPropertyChanged;
 		}
-		
+
 		void OnSettingsPropertyChanged(StringName category, StringName name, Variant oldValue, Variant newValue)
 		{
 			Callable.From(RebuildLogUI).CallDeferred();
@@ -69,12 +69,12 @@ namespace RoverControlApp.MVVM.ViewModel
 		{
 			_logDisplay = GetNode<RichTextLabel>("LogsDisplay");
 			_selectNode = GetNode<OptionButton>("SelectNode");
-			
+
 			foreach (string nodeName in _hardcodedNodes)
 			{
 				_selectNode.AddItem(nodeName);
 			}
-			
+
 			_selectNode.Select(0);
 		}
 
@@ -97,7 +97,7 @@ namespace RoverControlApp.MVVM.ViewModel
 				if (newLog == null)
 					throw new InvalidDataException("Invalid RosoutLogs payload.");
 
-				lock (_allLogsHistory) 
+				lock (_allLogsHistory)
 				{
 					_allLogsHistory.Add(newLog);
 
@@ -105,15 +105,15 @@ namespace RoverControlApp.MVVM.ViewModel
 						_allLogsHistory.RemoveAt(0);
 				}
 				Callable.From(RebuildLogUI).CallDeferred();
-				
+
 				OnNewLogReceived?.Invoke(newLog.level,SetLogColor(newLog.level));
 			}
 			catch (Exception e)
 			{
 				EventLogger.LogMessage("RosoutLogs", EventLogger.LogLevel.Error, $"{e.Message}");
-				
+
 			}
-			
+
 			return Task.CompletedTask;
 		}
 
@@ -124,7 +124,10 @@ namespace RoverControlApp.MVVM.ViewModel
 			lock (_allLogsHistory)
 			{
 				logsToRender = _allLogsHistory
-					.Where(log => _activeFilters.TryGetValue(log.level, out bool isActive) && isActive)
+					.Where(log =>
+					_activeFilters.TryGetValue(log.level, out bool isActive) && isActive
+					&& (_selectedNodeFilter == "All" || log.name == _selectedNodeFilter)
+					)
 					.ToList();
 			}
 
@@ -134,17 +137,18 @@ namespace RoverControlApp.MVVM.ViewModel
 			{
 				sb.Append($"[color={SetLogColor(log.level).ToHtml(false)}]");
 
-				var segments = new List<string>();
-
-				segments.Add(DateTimeOffset.FromUnixTimeSeconds(log.Timestamp).LocalDateTime.ToString("HH:mm:ss.fff"));
-				segments.Add(LevelIntToString(log.level));
-				segments.Add(log.name);
+				var segments = new List<string>
+				{
+					DateTimeOffset.FromUnixTimeSeconds(log.Timestamp).LocalDateTime.ToString("HH:mm:ss.fff"),
+					LevelIntToString(log.level),
+					log.name
+				};
 
 				if (LocalSettings.Singleton.Rosout.Message) segments.Add(log.message);
 				if (LocalSettings.Singleton.Rosout.File) segments.Add(log.file);
 				if (LocalSettings.Singleton.Rosout.Function) segments.Add(log.function);
 				if (LocalSettings.Singleton.Rosout.Line) segments.Add(log.line.ToString());
-				
+
 
 				sb.Append(string.Join(" : ", segments));
 				sb.Append("[/color]\n");
@@ -161,18 +165,18 @@ namespace RoverControlApp.MVVM.ViewModel
 				Callable.From(RebuildLogUI).CallDeferred();
 			}
 		}
-		
-		public void OnNodeFilterItemSelected(long index)
+
+		public void OnNodeFilterItemSelected(int index)
 		{
-			_selectedNodeFilter = _selectNode.GetItemText((int)index);
-			
+			_selectedNodeFilter = _selectNode.GetItemText(index);
+
 			Callable.From(RebuildLogUI).CallDeferred();
 		}
-		
+
 		public string LevelIntToString(int? level)
 		{
 			string val = "DEBUG";
-			
+
 			switch (level)
 			{
 				case 10:
@@ -191,7 +195,7 @@ namespace RoverControlApp.MVVM.ViewModel
 					val = "FATAL";
 					break;
 			}
-			
+
 			return val;
 		}
 

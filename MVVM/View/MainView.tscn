@@ -45,14 +45,6 @@ keycode = 71
 [sub_resource type="Shortcut" id="Shortcut_nofgb"]
 events = [SubResource("InputEventKey_57mg7")]
 
-[sub_resource type="InputEventKey" id="InputEventKey_ywgy7"]
-device = -1
-alt_pressed = true
-keycode = 83
-
-[sub_resource type="Shortcut" id="Shortcut_gr50h"]
-events = [SubResource("InputEventKey_ywgy7")]
-
 [sub_resource type="Gradient" id="Gradient_nrybp"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.6)
@@ -64,6 +56,14 @@ width = 32
 height = 32
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="InputEventKey" id="InputEventKey_ywgy7"]
+device = -1
+alt_pressed = true
+keycode = 83
+
+[sub_resource type="Shortcut" id="Shortcut_gr50h"]
+events = [SubResource("InputEventKey_ywgy7")]
 
 [node name="MainView" type="Control" node_paths=PackedStringArray("imTextureRect", "RoverModeUIDis", "DriveModeUIDis", "SafeModeUIDis", "GrzybUIDis", "MissionStatusUIDis", "DualSeatSlaveUIDis", "ShowSettingsBtn", "ShowVelMonitor", "ShowMissionControlBrn", "ShowBatteryMonitor", "SettingsManagerNode", "MissionControlNode", "FancyDebugViewRLab", "VelMonitor", "ZedMonitor", "BatteryMonitor", "InputHelpMaster", "RosoutLogs", "RosoutDot")]
 layout_mode = 3
@@ -294,13 +294,6 @@ toggle_mode = true
 shortcut = SubResource("Shortcut_nofgb")
 text = "GYRO"
 
-[node name="ShowSettingsBtn" type="Button" parent="HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-shortcut = SubResource("Shortcut_gr50h")
-text = "SETTINGS"
-
 [node name="ShowRosoutLogs" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -315,6 +308,13 @@ offset_right = 14.0
 offset_bottom = 13.0
 texture = SubResource("GradientTexture2D_lgu23")
 expand_mode = 1
+
+[node name="ShowSettingsBtn" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+shortcut = SubResource("Shortcut_gr50h")
+text = "SETTINGS"
 
 [node name="MissionControl" parent="." instance=ExtResource("4_wrhi8")]
 visible = false
@@ -411,10 +411,10 @@ offset_bottom = -40.0
 [connection signal="toggled" from="HBoxContainer/ShowVelMonitor" to="VelMonitor" method="set_visible"]
 [connection signal="toggled" from="HBoxContainer/ShowBatteryMonitor" to="BatteryMonitor" method="set_visible"]
 [connection signal="toggled" from="HBoxContainer/ShowZedMonitor" to="ZedMonitor" method="set_visible"]
-[connection signal="toggled" from="HBoxContainer/ShowSettingsBtn" to="SettingsManager" method="set_visible"]
-[connection signal="toggled" from="HBoxContainer/ShowSettingsBtn" to="SettingsManager" method="OnVisibilityChange"]
-[connection signal="toggled" from="HBoxContainer/ShowSettingsBtn" to="SettingsManager" method="Redraw"]
 [connection signal="toggled" from="HBoxContainer/ShowRosoutLogs" to="." method="OnRosoutButtonToggled"]
+[connection signal="toggled" from="HBoxContainer/ShowSettingsBtn" to="SettingsManager" method="set_visible"]
+[connection signal="toggled" from="HBoxContainer/ShowSettingsBtn" to="SettingsManager" method="Redraw"]
+[connection signal="toggled" from="HBoxContainer/ShowSettingsBtn" to="SettingsManager" method="OnVisibilityChange"]
 
 [editable path="GrzybUIDis"]
 [editable path="RoverModeUIDis"]
