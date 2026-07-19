@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://MVVM/ViewModel/RosoutLogs.cs" id="1_gvkd6"]
 
-[node name="RosoutLogs" type="Panel"]
+[node name="RosoutLogs" type="Panel" node_paths=PackedStringArray("_logDisplay", "_selectNode")]
 anchors_preset = -1
 anchor_left = 0.002
 anchor_top = 0.002
@@ -10,9 +10,11 @@ anchor_right = 0.002
 anchor_bottom = 0.002
 offset_left = -0.308
 offset_top = -0.296
-offset_right = 429.692
-offset_bottom = 239.704
+offset_right = 598.692
+offset_bottom = 367.704
 script = ExtResource("1_gvkd6")
+_logDisplay = NodePath("LogsDisplay")
+_selectNode = NodePath("SelectNode")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
@@ -26,9 +28,10 @@ text = "Rosout"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_top = 24.0
-offset_right = 430.0
-offset_bottom = 55.0
+offset_left = 163.0
+offset_top = 35.0
+offset_right = 593.0
+offset_bottom = 66.0
 
 [node name="DEBUG" type="CheckBox" parent="HBoxContainer"]
 layout_mode = 2
@@ -55,17 +58,19 @@ text = "FATAL"
 
 [node name="LogsDisplay" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_top = 53.0
-offset_right = 429.0
-offset_bottom = 240.0
-theme_override_font_sizes/normal_font_size = 14
+offset_left = 6.0
+offset_top = 70.0
+offset_right = 593.0
+offset_bottom = 360.0
 bbcode_enabled = true
 scroll_following = true
 
 [node name="SelectNode" type="OptionButton" parent="."]
 layout_mode = 0
-offset_right = 143.0
-offset_bottom = 23.0
+offset_left = 8.0
+offset_top = 37.0
+offset_right = 151.0
+offset_bottom = 60.0
 
 [connection signal="toggled" from="HBoxContainer/DEBUG" to="." method="ToggleFilter" binds= [10]]
 [connection signal="toggled" from="HBoxContainer/INFO" to="." method="ToggleFilter" binds= [20]]

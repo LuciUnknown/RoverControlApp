@@ -136,6 +136,7 @@ namespace RoverControlApp.MVVM.ViewModel
 			foreach (var log in logsToRender)
 			{
 				sb.Append($"[color={SetLogColor(log.level).ToHtml(false)}]");
+				if (log.level == 50) sb.Append("[i][b]");
 
 				var segments = new List<string>
 				{
@@ -151,6 +152,7 @@ namespace RoverControlApp.MVVM.ViewModel
 
 
 				sb.Append(string.Join(" : ", segments));
+				if (log.level == 50) sb.Append("[/b][/i]");
 				sb.Append("[/color]\n");
 			}
 
@@ -215,6 +217,8 @@ namespace RoverControlApp.MVVM.ViewModel
 					color = Colors.Yellow;
 					break;
 				case 40:
+					color = Colors.Red;
+					break;
 				case 50:
 					color = Colors.Red;
 					break;
